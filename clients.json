@@ -1,0 +1,16 @@
+{
+  "vietcapitalland_hftc": {
+    "id": "vietcapitalland_hftc",
+    "name": "VietcapitalLand",
+    "googleSheetId": "15Dl1ATg1Y_9dIaWXgOMBwkNDXapnnrS8TWedGLCE35Q",
+    "createdAt": "2026-01-20T08:11:02.832Z",
+    "updatedAt": "2026-01-20T08:13:20.169Z",
+    "googleOAuthTokens": {
+      "access_token": "ya29.a0AUMWg_KpMGQqjZNEbo0VmIt1Ks_aM_W_isjoyF52zKcDNrwpRdPiRA7Ieu4MzBDU87_sh5yUQMGDztSTpWTCvra1lsMWipyiYOZMEYtWTDL8tLOF9mvneqY-pxQSBu9iHAqdW_hfsymlou3DIywGvD9wyOwLZkb9X0fLFlijobgArv_tnwPtkpV40nvN_r0b2_20CsQaCgYKAbYSARUSFQHGX2Mi3qPelmnEKDS9m6QZ2Hp4cg0206",
+      "refresh_token": "1//0eMSgHvKf_u6bCgYIARAAGA4SNwF-L9IrR3tOv0-2IPYfGxd86r-M0GJ4y4TdkFKFHcqxycuQv5LXbkj62BerytyiSQZ4mBvQSiA",
+      "scope": "https://www.googleapis.com/auth/spreadsheets",
+      "token_type": "Bearer",
+      "expiry_date": 1768900399169
+    }
+  }
+}
