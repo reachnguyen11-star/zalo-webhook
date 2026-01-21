@@ -101,7 +101,7 @@ router.get('/', (req, res) => {
         <title>Zalo Ads - Admin Dashboard</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta property="zalo-platform-site-verification" content="PeAU3-Ao7pS5I90VmBG_41gAf3ds_7DcD3Co" />
+        <meta name="zalo-platform-site-verification" content="PeAU3-Ao7pS5I90VmBG_41gAf3ds_7DcD3Co" />
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body {
