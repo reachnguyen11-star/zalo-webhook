@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import path from 'path';
 import { config } from './config/env.config';
 import { logger } from './utils/logger';
 import webhookRoutes from './routes/webhook.routes';
@@ -20,6 +21,11 @@ class App {
   }
 
   private initializeMiddlewares(): void {
+    // Serve static files from project root (for Zalo verification files)
+    // When built, files will be served from the parent directory of dist/
+    const staticPath = path.join(__dirname, '..');
+    this.app.use(express.static(staticPath));
+
     // Body parser
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const path_1 = __importDefault(require("path"));
 const env_config_1 = require("./config/env.config");
 const logger_1 = require("./utils/logger");
 const webhook_routes_1 = __importDefault(require("./routes/webhook.routes"));
@@ -20,6 +21,10 @@ class App {
         this.initializeErrorHandling();
     }
     initializeMiddlewares() {
+        // Serve static files from project root (for Zalo verification files)
+        // When built, files will be served from the parent directory of dist/
+        const staticPath = path_1.default.join(__dirname, '..');
+        this.app.use(express_1.default.static(staticPath));
         // Body parser
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: true }));
