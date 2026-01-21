@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const path_1 = __importDefault(require("path"));
 const env_config_1 = require("./config/env.config");
 const logger_1 = require("./utils/logger");
 const webhook_routes_1 = __importDefault(require("./routes/webhook.routes"));
@@ -95,16 +94,7 @@ class App {
         </html>
       `);
         });
-        // Serve static files from project root (for Zalo verification files)
-        // This must come BEFORE /admin routes to serve verification files
-        const staticPath = path_1.default.join(__dirname, '..');
-        this.app.use(express_1.default.static(staticPath));
-        // Specific route for Zalo verification file (must come before /admin route)
-        this.app.get('/admin/zalo_verifier*.html', (req, res, next) => {
-            // Let static middleware handle this
-            next();
-        });
-        // API routes
+        // API routes (verification files are handled by admin.routes.ts)
         this.app.use('/auth', auth_routes_1.default);
         this.app.use('/webhook', webhook_routes_1.default);
         this.app.use('/admin', admin_routes_1.default);

@@ -5,7 +5,9 @@
       "Bash(npm run build)",
       "Bash(npm run dev)",
       "Bash(timeout:*)",
-      "Bash(curl -X POST:*)"
+      "Bash(curl -X POST:*)",
+      "Bash(ssh:*)",
+      "Bash(curl:*)"
     ]
   }
 }
