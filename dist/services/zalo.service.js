@@ -64,6 +64,9 @@ class ZaloService {
             if (event.event_name === 'form_submit' || event.event_name === 'follow' || data.form_id) {
                 return {
                     form_id: data.form_id || data.id,
+                    form_name: data.form_name || data.name,
+                    oa_id: data.oa_id || event.app_id,
+                    campaign_id: data.campaign_id || data.ad_id,
                     submit_time: data.submit_time || data.timestamp || Date.now(),
                     fields: this.normalizeFields(data.fields || data.form_data || []),
                     user_info: data.user_info || data.user,

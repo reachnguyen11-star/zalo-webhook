@@ -127,11 +127,18 @@ class WebhookController {
                 });
                 return;
             }
-            // Prepare lead data with normalized phone
+            // Prepare lead data with normalized phone and metadata
             const leadData = {
                 ...formData,
                 phone: normalizedPhone,
                 timestamp: new Date().toISOString(),
+                // Add metadata for tracking
+                form_id: formDataRaw.form_id,
+                form_name: formDataRaw.form_name || 'N/A',
+                oa_id: formDataRaw.oa_id || 'N/A',
+                campaign_id: formDataRaw.campaign_id || 'N/A',
+                user_id: formDataRaw.user_info?.user_id || 'N/A',
+                source: 'Zalo Ads',
             };
             // Format and append to sheet
             const row = await sheetsService.formatLeadData(leadData);

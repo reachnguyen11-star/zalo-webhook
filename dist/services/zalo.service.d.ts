@@ -6,6 +6,9 @@ export interface ZaloWebhookEvent {
 }
 export interface ZaloFormData {
     form_id: string;
+    form_name?: string;
+    oa_id?: string;
+    campaign_id?: string;
     submit_time: number;
     fields: Array<{
         id: string;
