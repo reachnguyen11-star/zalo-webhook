@@ -62,15 +62,25 @@ class WebhookController {
                     return;
                 }
             }
+            // Handle webhook verification request (empty body or test ping)
+            if (!req.body || Object.keys(req.body).length === 0) {
+                logger_1.logger.info('Webhook verification request (empty body)', { clientId });
+                res.status(200).json({
+                    success: true,
+                    message: 'Webhook endpoint is active',
+                });
+                return;
+            }
             // Parse webhook event
             const event = zalo_service_1.zaloService.parseWebhookEvent(req.body);
             // Extract form data
             const formDataRaw = zalo_service_1.zaloService.extractFormData(event);
             if (!formDataRaw || !formDataRaw.fields || formDataRaw.fields.length === 0) {
-                logger_1.logger.warn('No form data in webhook event', { clientId });
-                res.status(400).json({
-                    success: false,
-                    message: 'No form data found in event',
+                // Might be a verification ping, return success
+                logger_1.logger.info('No form data in webhook event (possibly verification)', { clientId, body: req.body });
+                res.status(200).json({
+                    success: true,
+                    message: 'Webhook received',
                 });
                 return;
             }
