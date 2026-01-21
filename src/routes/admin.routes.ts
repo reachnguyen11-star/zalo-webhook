@@ -21,6 +21,23 @@ function checkAuth(req: Request, res: Response, next: Function) {
 }
 
 /**
+ * GET /admin/zalo-verify - Lightweight Zalo verification page
+ */
+router.get('/zalo-verify', (req: Request, res: Response) => {
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="zalo-platform-site-verification" content="PeAU3-Ao7pS5I90VmBG_41gAf3ds_7DcD3Co" />
+<title>Zalo Verification</title>
+</head>
+<body>
+<h1>Zalo Platform Verification</h1>
+</body>
+</html>`);
+});
+
+/**
  * GET /admin/zalo_verifier*.html - Serve Zalo verification file
  */
 router.get('/zalo_verifier*.html', (req: Request, res: Response) => {
