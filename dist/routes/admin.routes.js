@@ -1,8 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_service_1 = require("../services/client.service");
 const logger_1 = require("../utils/logger");
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const router = (0, express_1.Router)();
 // Simple admin password protection (should use proper auth in production)
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
@@ -14,6 +19,19 @@ function checkAuth(req, res, next) {
     }
     next();
 }
+/**
+ * GET /admin/zalo_verifier*.html - Serve Zalo verification file
+ */
+router.get('/zalo_verifier*.html', (req, res) => {
+    const filename = req.path.split('/').pop();
+    const filePath = path_1.default.join(process.cwd(), 'admin', filename || '');
+    if (fs_1.default.existsSync(filePath)) {
+        res.sendFile(filePath);
+    }
+    else {
+        res.status(404).send('Verification file not found');
+    }
+});
 /**
  * GET /admin/clients - List all clients
  */

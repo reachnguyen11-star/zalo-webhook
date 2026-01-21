@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { clientService } from '../services/client.service';
 import { logger } from '../utils/logger';
+import fs from 'fs';
+import path from 'path';
 
 const router = Router();
 
@@ -17,6 +19,20 @@ function checkAuth(req: Request, res: Response, next: Function) {
 
   next();
 }
+
+/**
+ * GET /admin/zalo_verifier*.html - Serve Zalo verification file
+ */
+router.get('/zalo_verifier*.html', (req: Request, res: Response) => {
+  const filename = req.path.split('/').pop();
+  const filePath = path.join(process.cwd(), 'admin', filename || '');
+
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('Verification file not found');
+  }
+});
 
 /**
  * GET /admin/clients - List all clients
