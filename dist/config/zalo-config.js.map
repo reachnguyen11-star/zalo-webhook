@@ -1,0 +1,1 @@
+{"version":3,"file":"zalo-config.js","sourceRoot":"","sources":["../../src/config/zalo-config.ts"],"names":[],"mappings":";;;AAAA,6CAAsC;AAEzB,QAAA,UAAU,GAAG;IACxB,KAAK,EAAE,mBAAM,CAAC,IAAI,CAAC,KAAK;IACxB,SAAS,EAAE,mBAAM,CAAC,IAAI,CAAC,SAAS;IAChC,aAAa,EAAE,mBAAM,CAAC,IAAI,CAAC,aAAa;IAExC,qBAAqB;IACrB,SAAS,EAAE;QACT,KAAK,EAAE,2CAA2C;QAClD,QAAQ,EAAE,qDAAqD;KAChE;CACF,CAAC"}
