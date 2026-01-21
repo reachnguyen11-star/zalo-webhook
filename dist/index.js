@@ -21,10 +21,6 @@ class App {
         this.initializeErrorHandling();
     }
     initializeMiddlewares() {
-        // Serve static files from project root (for Zalo verification files)
-        // When built, files will be served from the parent directory of dist/
-        const staticPath = path_1.default.join(__dirname, '..');
-        this.app.use(express_1.default.static(staticPath));
         // Body parser
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: true }));
@@ -98,6 +94,15 @@ class App {
           </body>
         </html>
       `);
+        });
+        // Serve static files from project root (for Zalo verification files)
+        // This must come BEFORE /admin routes to serve verification files
+        const staticPath = path_1.default.join(__dirname, '..');
+        this.app.use(express_1.default.static(staticPath));
+        // Specific route for Zalo verification file (must come before /admin route)
+        this.app.get('/admin/zalo_verifier*.html', (req, res, next) => {
+            // Let static middleware handle this
+            next();
         });
         // API routes
         this.app.use('/auth', auth_routes_1.default);
