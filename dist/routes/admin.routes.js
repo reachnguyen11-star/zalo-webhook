@@ -1,13 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_service_1 = require("../services/client.service");
 const logger_1 = require("../utils/logger");
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
 const router = (0, express_1.Router)();
 // Simple admin password protection (should use proper auth in production)
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
@@ -37,16 +32,20 @@ router.get('/zalo-verify', (req, res) => {
 });
 /**
  * GET /admin/zalo_verifier*.html - Serve Zalo verification file
+ * Note: Zalo searches for filename with lowercase 'l' (not uppercase 'I')
  */
-router.get('/zalo_verifier*.html', (req, res) => {
-    const filename = req.path.split('/').pop();
-    const filePath = path_1.default.join(process.cwd(), 'admin', filename || '');
-    if (fs_1.default.existsSync(filePath)) {
-        res.sendFile(filePath);
-    }
-    else {
-        res.status(404).send('Verification file not found');
-    }
+router.get('/zalo_verifierPeAU3-Ao7pS5l90VmBG_41gAf3ds_7DcD3Co.html', (req, res) => {
+    res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="zalo-platform-site-verification" content="PeAU3-Ao7pS5l90VmBG_41gAf3ds_7DcD3Co" />
+    <title>Zalo Verification</title>
+</head>
+<body>
+There Is No Limit To What You Can Accomplish Using Zalo!
+</body>
+</html>`);
 });
 /**
  * GET /admin/clients - List all clients

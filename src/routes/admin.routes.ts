@@ -39,16 +39,20 @@ router.get('/zalo-verify', (req: Request, res: Response) => {
 
 /**
  * GET /admin/zalo_verifier*.html - Serve Zalo verification file
+ * Note: Zalo searches for filename with lowercase 'l' (not uppercase 'I')
  */
-router.get('/zalo_verifier*.html', (req: Request, res: Response) => {
-  const filename = req.path.split('/').pop();
-  const filePath = path.join(process.cwd(), 'admin', filename || '');
-
-  if (fs.existsSync(filePath)) {
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send('Verification file not found');
-  }
+router.get('/zalo_verifierPeAU3-Ao7pS5l90VmBG_41gAf3ds_7DcD3Co.html', (req: Request, res: Response) => {
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="zalo-platform-site-verification" content="PeAU3-Ao7pS5l90VmBG_41gAf3ds_7DcD3Co" />
+    <title>Zalo Verification</title>
+</head>
+<body>
+There Is No Limit To What You Can Accomplish Using Zalo!
+</body>
+</html>`);
 });
 
 /**
