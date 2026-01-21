@@ -106,9 +106,18 @@ export class WebhookController {
       }
 
       // Get phone number and validate
-      const phoneField = Object.keys(formData).find(
-        (key) => key.toLowerCase() === 'phone' || key.toLowerCase() === 'số điện thoại'
-      );
+      // Try multiple variations: exact match, lowercase, and partial match
+      const phoneField = Object.keys(formData).find((key) => {
+        const lowerKey = key.toLowerCase();
+        return (
+          lowerKey === 'phone' ||
+          lowerKey === 'số điện thoại' ||
+          lowerKey === 'so dien thoai' ||
+          lowerKey.includes('phone') ||
+          lowerKey.includes('dien thoai') ||
+          lowerKey.includes('di?n tho?i') // Handle encoding issues
+        );
+      });
 
       if (!phoneField || !formData[phoneField]) {
         logger.warn('Phone number is required', { clientId, formData });
