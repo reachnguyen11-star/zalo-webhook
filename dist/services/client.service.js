@@ -91,7 +91,7 @@ class ClientService {
     /**
      * Create new client
      */
-    createClient(name, googleSheetId) {
+    createClient(name, googleSheetId, sheetName) {
         const clientId = this.generateClientId(name);
         if (this.clients[clientId]) {
             throw new Error(`Client ID ${clientId} already exists`);
@@ -100,6 +100,7 @@ class ClientService {
             id: clientId,
             name,
             googleSheetId,
+            sheetName,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };

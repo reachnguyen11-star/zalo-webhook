@@ -59,7 +59,7 @@ router.get('/clients', checkAuth, (req, res) => {
  */
 router.post('/clients', checkAuth, (req, res) => {
     try {
-        const { name, spreadsheetId } = req.body;
+        const { name, spreadsheetId, sheetName } = req.body;
         if (!name || !spreadsheetId) {
             res.status(400).json({
                 success: false,
@@ -67,7 +67,7 @@ router.post('/clients', checkAuth, (req, res) => {
             });
             return;
         }
-        const client = client_service_1.clientService.createClient(name, spreadsheetId);
+        const client = client_service_1.clientService.createClient(name, spreadsheetId, sheetName);
         res.json({ success: true, client });
     }
     catch (error) {
@@ -300,6 +300,11 @@ router.get('/', (req, res) => {
                 <input type="text" id="spreadsheetId" required placeholder="1ABC2DEF3GHI...">
                 <small style="color: #666; font-size: 12px;">Lấy từ URL Google Sheet</small>
               </div>
+              <div class="form-group">
+                <label>Sheet Name (Tab):</label>
+                <input type="text" id="sheetName" placeholder="VD: Zalo (để trống nếu dùng sheet đầu tiên)">
+                <small style="color: #666; font-size: 12px;">Tên tab trong Google Sheet (mặc định: Sheet1)</small>
+              </div>
               <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="submit" class="btn">Tạo Client</button>
                 <button type="button" class="btn" style="background: #6c757d;" onclick="closeModal()">Hủy</button>
@@ -321,6 +326,7 @@ router.get('/', (req, res) => {
             e.preventDefault();
             const name = document.getElementById('clientName').value;
             const spreadsheetId = document.getElementById('spreadsheetId').value;
+            const sheetName = document.getElementById('sheetName').value;
 
             try {
               const res = await fetch('/admin/clients', {
@@ -329,7 +335,7 @@ router.get('/', (req, res) => {
                   'Content-Type': 'application/json',
                   'Authorization': 'Bearer ${ADMIN_PASSWORD}'
                 },
-                body: JSON.stringify({ name, spreadsheetId })
+                body: JSON.stringify({ name, spreadsheetId, sheetName: sheetName || undefined })
               });
 
               const data = await res.json();

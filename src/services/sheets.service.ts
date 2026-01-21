@@ -14,11 +14,13 @@ export class SheetsService {
   private sheets: sheets_v4.Sheets;
   private spreadsheetId: string;
   private clientId: string;
+  private sheetName: string;
 
-  constructor(oauth2Client: OAuth2Client, spreadsheetId: string, clientId: string) {
+  constructor(oauth2Client: OAuth2Client, spreadsheetId: string, clientId: string, sheetName?: string) {
     this.sheets = google.sheets({ version: 'v4', auth: oauth2Client });
     this.spreadsheetId = spreadsheetId;
     this.clientId = clientId;
+    this.sheetName = sheetName || 'Sheet1'; // Default to Sheet1 if not specified
   }
 
   /**
@@ -26,11 +28,11 @@ export class SheetsService {
    */
   async appendRow(values: any[]): Promise<void> {
     try {
-      logger.debug('Appending row to sheet', { clientId: this.clientId, values });
+      logger.debug('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, values });
 
       const response = await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
-        range: 'Sheet1!A:Z', // Auto-detect columns
+        range: `${this.sheetName}!A:Z`, // Use specified sheet name
         valueInputOption: 'RAW',
         requestBody: {
           values: [values],
@@ -39,11 +41,12 @@ export class SheetsService {
 
       logger.info('Successfully appended row to sheet', {
         clientId: this.clientId,
+        sheetName: this.sheetName,
         updatedCells: response.data.updates?.updatedCells,
         updatedRange: response.data.updates?.updatedRange,
       });
     } catch (error: any) {
-      logger.error('Error appending row to sheet', { clientId: this.clientId, error });
+      logger.error('Error appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, error });
       throw new ExternalAPIError('Google Sheets', error.message);
     }
   }
@@ -59,7 +62,7 @@ export class SheetsService {
       const columnLetter = this.getColumnLetter(phoneColumnIndex);
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: `Sheet1!${columnLetter}:${columnLetter}`,
+        range: `${this.sheetName}!${columnLetter}:${columnLetter}`,
       });
 
       const phones = new Set<string>();

@@ -8,6 +8,7 @@ export interface Client {
   id: string;
   name: string;
   googleSheetId: string;
+  sheetName?: string; // Optional: specific sheet tab name (default: first sheet)
   googleOAuthTokens?: any;
   createdAt: string;
   updatedAt: string;
@@ -73,7 +74,7 @@ export class ClientService {
   /**
    * Create new client
    */
-  createClient(name: string, googleSheetId: string): Client {
+  createClient(name: string, googleSheetId: string, sheetName?: string): Client {
     const clientId = this.generateClientId(name);
 
     if (this.clients[clientId]) {
@@ -84,6 +85,7 @@ export class ClientService {
       id: clientId,
       name,
       googleSheetId,
+      sheetName,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

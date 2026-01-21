@@ -8,7 +8,8 @@ export declare class SheetsService {
     private sheets;
     private spreadsheetId;
     private clientId;
-    constructor(oauth2Client: OAuth2Client, spreadsheetId: string, clientId: string);
+    private sheetName;
+    constructor(oauth2Client: OAuth2Client, spreadsheetId: string, clientId: string, sheetName?: string);
     /**
      * Append a new row to the spreadsheet
      */

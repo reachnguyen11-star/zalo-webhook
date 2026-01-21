@@ -115,7 +115,8 @@ class WebhookController {
             }
             // Create SheetsService for this client
             const oauth2Client = await google_auth_1.googleAuth.getClientForOAuth(clientId);
-            const sheetsService = new sheets_service_1.SheetsService(oauth2Client, client.googleSheetId, clientId);
+            const sheetsService = new sheets_service_1.SheetsService(oauth2Client, client.googleSheetId, clientId, client.sheetName // Pass sheet name (defaults to 'Sheet1' if not specified)
+            );
             // Check for duplicate
             const isDuplicate = await sheetsService.findDuplicatePhone(normalizedPhone);
             if (isDuplicate) {

@@ -6,20 +6,21 @@ const logger_1 = require("../utils/logger");
 const phone_normalizer_1 = require("../utils/phone-normalizer");
 const errors_1 = require("../utils/errors");
 class SheetsService {
-    constructor(oauth2Client, spreadsheetId, clientId) {
+    constructor(oauth2Client, spreadsheetId, clientId, sheetName) {
         this.sheets = googleapis_1.google.sheets({ version: 'v4', auth: oauth2Client });
         this.spreadsheetId = spreadsheetId;
         this.clientId = clientId;
+        this.sheetName = sheetName || 'Sheet1'; // Default to Sheet1 if not specified
     }
     /**
      * Append a new row to the spreadsheet
      */
     async appendRow(values) {
         try {
-            logger_1.logger.debug('Appending row to sheet', { clientId: this.clientId, values });
+            logger_1.logger.debug('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, values });
             const response = await this.sheets.spreadsheets.values.append({
                 spreadsheetId: this.spreadsheetId,
-                range: 'Sheet1!A:Z', // Auto-detect columns
+                range: `${this.sheetName}!A:Z`, // Use specified sheet name
                 valueInputOption: 'RAW',
                 requestBody: {
                     values: [values],
@@ -27,12 +28,13 @@ class SheetsService {
             });
             logger_1.logger.info('Successfully appended row to sheet', {
                 clientId: this.clientId,
+                sheetName: this.sheetName,
                 updatedCells: response.data.updates?.updatedCells,
                 updatedRange: response.data.updates?.updatedRange,
             });
         }
         catch (error) {
-            logger_1.logger.error('Error appending row to sheet', { clientId: this.clientId, error });
+            logger_1.logger.error('Error appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, error });
             throw new errors_1.ExternalAPIError('Google Sheets', error.message);
         }
     }
@@ -46,7 +48,7 @@ class SheetsService {
             const columnLetter = this.getColumnLetter(phoneColumnIndex);
             const response = await this.sheets.spreadsheets.values.get({
                 spreadsheetId: this.spreadsheetId,
-                range: `Sheet1!${columnLetter}:${columnLetter}`,
+                range: `${this.sheetName}!${columnLetter}:${columnLetter}`,
             });
             const phones = new Set();
             const rows = response.data.values || [];

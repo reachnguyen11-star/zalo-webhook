@@ -2,6 +2,7 @@ export interface Client {
     id: string;
     name: string;
     googleSheetId: string;
+    sheetName?: string;
     googleOAuthTokens?: any;
     createdAt: string;
     updatedAt: string;
@@ -31,7 +32,7 @@ export declare class ClientService {
     /**
      * Create new client
      */
-    createClient(name: string, googleSheetId: string): Client;
+    createClient(name: string, googleSheetId: string, sheetName?: string): Client;
     /**
      * Update client
      */
