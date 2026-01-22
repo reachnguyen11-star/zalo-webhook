@@ -22,6 +22,7 @@ class SheetsService {
                 spreadsheetId: this.spreadsheetId,
                 range: `${this.escapeSheetName(this.sheetName)}!A:Z`, // Use specified sheet name with proper escaping
                 valueInputOption: 'RAW',
+                insertDataOption: 'INSERT_ROWS', // Always insert new rows instead of overwriting
                 requestBody: {
                     values: [values],
                 },
