@@ -191,6 +191,31 @@ export class SheetsService {
   }
 
   /**
+   * Normalize Vietnamese text by removing diacritics and replacing spaces with underscores
+   */
+  private normalizeVietnamese(text: string): string {
+    // Replace spaces with underscores
+    let normalized = text.replace(/\s+/g, '_');
+
+    // Remove Vietnamese diacritics
+    const diacriticsMap: { [key: string]: string } = {
+      'à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ': 'a',
+      'è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ': 'e',
+      'ì|í|ị|ỉ|ĩ': 'i',
+      'ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ': 'o',
+      'ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ': 'u',
+      'ỳ|ý|ỵ|ỷ|ỹ': 'y',
+      'đ': 'd',
+    };
+
+    for (const pattern in diacriticsMap) {
+      normalized = normalized.replace(new RegExp(pattern, 'g'), diacriticsMap[pattern]);
+    }
+
+    return normalized;
+  }
+
+  /**
    * Format lead data into row array based on headers
    */
   async formatLeadData(leadData: LeadData, customHeaders?: string[]): Promise<any[]> {
@@ -214,25 +239,60 @@ export class SheetsService {
 
     // Map lead data to header positions
     const row = headers.map((header) => {
-      const key = header.toLowerCase().replace(/\s+/g, '_');
+      const normalizedHeader = this.normalizeVietnamese(header.toLowerCase());
 
-      // Handle common field mappings
-      if (key === 'timestamp') {
+      // Vietnamese header mappings
+      const headerMappings: { [key: string]: string } = {
+        'ngay': 'timestamp',
+        'ho_va_ten': 'name',
+        'ho_ten': 'name',
+        'ten': 'name',
+        'name': 'name',
+        'so_dien_thoai': 'phone',
+        'dien_thoai': 'phone',
+        'phone': 'phone',
+        'email': 'email',
+        'nhu_cau': 'note',
+        'note': 'note',
+        'ghi_chu': 'note',
+        'status': 'status',
+        'ad_id': 'form_id',
+        'form_id': 'form_id',
+        'oa_id': 'oa_id',
+        'campaign_id': 'campaign_id',
+        'source': 'source',
+      };
+
+      const mappedKey = headerMappings[normalizedHeader];
+
+      // Handle special field mappings
+      if (mappedKey === 'timestamp') {
         return leadData.timestamp || new Date().toISOString();
       }
-      if (key === 'source') {
+      if (mappedKey === 'source') {
         return 'Zalo Ads';
       }
-
-      // Handle phone number - prefix with apostrophe to force text format in Sheets
-      if (key === 'phone') {
-        const leadKey = Object.keys(leadData).find((k) => k.toLowerCase() === 'phone');
-        return leadKey && leadData[leadKey] ? `'${leadData[leadKey]}` : '';
+      if (mappedKey === 'phone') {
+        return leadData.phone ? `'${leadData.phone}` : '';
+      }
+      if (mappedKey === 'name') {
+        // Try to find name field from leadData
+        const nameKey = Object.keys(leadData).find((k) =>
+          k.toLowerCase().includes('name') ||
+          k.toLowerCase().includes('ten') ||
+          k.toLowerCase().includes('ho')
+        );
+        return nameKey ? leadData[nameKey] : '';
       }
 
-      // Find matching field in lead data (case-insensitive)
+      // Direct mapping if exists
+      if (mappedKey && leadData[mappedKey]) {
+        return leadData[mappedKey];
+      }
+
+      // Try to find matching field in lead data (case-insensitive)
       const leadKey = Object.keys(leadData).find(
-        (k) => k.toLowerCase() === key || k.toLowerCase().replace(/\s+/g, '_') === key
+        (k) => this.normalizeVietnamese(k.toLowerCase()) === normalizedHeader
       );
 
       return leadKey ? leadData[leadKey] : '';

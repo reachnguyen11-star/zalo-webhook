@@ -41,6 +41,10 @@ export declare class SheetsService {
      */
     private escapeSheetName;
     /**
+     * Normalize Vietnamese text by removing diacritics and replacing spaces with underscores
+     */
+    private normalizeVietnamese;
+    /**
      * Format lead data into row array based on headers
      */
     formatLeadData(leadData: LeadData, customHeaders?: string[]): Promise<any[]>;
