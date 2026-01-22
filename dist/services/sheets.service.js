@@ -20,7 +20,7 @@ class SheetsService {
             logger_1.logger.debug('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, values });
             const response = await this.sheets.spreadsheets.values.append({
                 spreadsheetId: this.spreadsheetId,
-                range: `${this.sheetName}!A:Z`, // Use specified sheet name
+                range: `${this.escapeSheetName(this.sheetName)}!A:Z`, // Use specified sheet name with proper escaping
                 valueInputOption: 'RAW',
                 requestBody: {
                     values: [values],
@@ -48,7 +48,7 @@ class SheetsService {
             const columnLetter = this.getColumnLetter(phoneColumnIndex);
             const response = await this.sheets.spreadsheets.values.get({
                 spreadsheetId: this.spreadsheetId,
-                range: `${this.sheetName}!${columnLetter}:${columnLetter}`,
+                range: `${this.escapeSheetName(this.sheetName)}!${columnLetter}:${columnLetter}`,
             });
             const phones = new Set();
             const rows = response.data.values || [];
@@ -99,13 +99,13 @@ class SheetsService {
             // Check if sheet has any data
             const response = await this.sheets.spreadsheets.values.get({
                 spreadsheetId: this.spreadsheetId,
-                range: 'Sheet1!A1:Z1',
+                range: `${this.escapeSheetName(this.sheetName)}!A1:Z1`,
             });
             if (!response.data.values || response.data.values.length === 0) {
                 // Sheet is empty, add headers
                 await this.sheets.spreadsheets.values.update({
                     spreadsheetId: this.spreadsheetId,
-                    range: 'Sheet1!A1',
+                    range: `${this.escapeSheetName(this.sheetName)}!A1`,
                     valueInputOption: 'USER_ENTERED',
                     requestBody: {
                         values: [headers],
@@ -132,7 +132,7 @@ class SheetsService {
         try {
             const response = await this.sheets.spreadsheets.values.get({
                 spreadsheetId: this.spreadsheetId,
-                range: 'Sheet1!A1:Z1',
+                range: `${this.escapeSheetName(this.sheetName)}!A1:Z1`,
             });
             return response.data.values?.[0] || [];
         }
@@ -151,6 +151,19 @@ class SheetsService {
             index = Math.floor(index / 26) - 1;
         }
         return letter;
+    }
+    /**
+     * Escape sheet name for Google Sheets API range notation
+     * Sheet names with special characters need to be wrapped in single quotes
+     */
+    escapeSheetName(sheetName) {
+        // If sheet name contains special characters like spaces, parentheses, etc., wrap in single quotes
+        if (/[^A-Za-z0-9_]/.test(sheetName)) {
+            // Escape single quotes by doubling them
+            const escaped = sheetName.replace(/'/g, "''");
+            return `'${escaped}'`;
+        }
+        return sheetName;
     }
     /**
      * Format lead data into row array based on headers

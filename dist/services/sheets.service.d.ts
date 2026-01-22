@@ -36,6 +36,11 @@ export declare class SheetsService {
      */
     private getColumnLetter;
     /**
+     * Escape sheet name for Google Sheets API range notation
+     * Sheet names with special characters need to be wrapped in single quotes
+     */
+    private escapeSheetName;
+    /**
      * Format lead data into row array based on headers
      */
     formatLeadData(leadData: LeadData, customHeaders?: string[]): Promise<any[]>;
