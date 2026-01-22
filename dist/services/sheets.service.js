@@ -17,7 +17,7 @@ class SheetsService {
      */
     async appendRow(values) {
         try {
-            logger_1.logger.debug('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, values });
+            logger_1.logger.info('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, valuesCount: values.length, values });
             const response = await this.sheets.spreadsheets.values.append({
                 spreadsheetId: this.spreadsheetId,
                 range: `${this.escapeSheetName(this.sheetName)}!A:Z`, // Use specified sheet name with proper escaping

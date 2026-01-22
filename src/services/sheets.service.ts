@@ -28,7 +28,7 @@ export class SheetsService {
    */
   async appendRow(values: any[]): Promise<void> {
     try {
-      logger.debug('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, values });
+      logger.info('Appending row to sheet', { clientId: this.clientId, sheetName: this.sheetName, valuesCount: values.length, values });
 
       const response = await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
