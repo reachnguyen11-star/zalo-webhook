@@ -61,7 +61,8 @@ class ZaloService {
                 return null;
             }
             // Handle form submission event
-            if (event.event_name === 'form_submit' || event.event_name === 'follow' || data.form_id) {
+            // Zalo uses 'user_submit_info' for form submissions in OA
+            if (event.event_name === 'form_submit' || event.event_name === 'user_submit_info' || event.event_name === 'follow' || data.form_id) {
                 return {
                     form_id: data.form_id || data.id,
                     form_name: data.form_name || data.name,
